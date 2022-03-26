@@ -1,0 +1,31 @@
+TODO
+delete playerdata command
+clean up output texts
+land info command
+get rid of automatic database clearing
+emoji prototyping
+
+
+database tables
+[ID]-P: players in that session
+[ID]-W: world data for that session
+[ID]-S: Ships built in that session
+
+
+ASHES is a game about escaping a harmful relationship.
+ASHES is a game about people telling you to be someone else.
+ASHES is a game about decay as a change, not just a destruction.
+ASHES is a game about the trust you put in the world, and the trust the world puts in you.
+ASHES is a game about always finding a way through.
+ASHES is a game about making do with what you have.
+ASHES is a game about fire.
+ 
+
+list of commands!
+Register: enables ashes in this server.
+Install: sets up ashes for a user on the server.
+Name: change your name & description.
+Info: view information about yourself or another player.
+Quest: go adventuring.
+Build: Build something.
+Launch
