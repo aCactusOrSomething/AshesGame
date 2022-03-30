@@ -20,3 +20,8 @@ rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: commands })
 rest.put(Routes.applicationGuildCommands(clientId, nebId), { body: commands })
 	.then(() => console.log('Successfully registered application commands for 2nd server.'))
 	.catch(console.error);
+
+rest.put(
+	Routes.applicationCommands(clientId),
+	{ body: commands },
+);
