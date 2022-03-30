@@ -25,6 +25,7 @@ module.exports = {
 
 					let name = await playerData.get('name');
 					let desc = await playerData.get('description');
+					const emoji = await playerData.get('naviganter');
 
 					if (newName != null) {
 						await PlayersTable.update({ name: newName }, { where: { userId: interaction.user.id } });
@@ -40,7 +41,8 @@ module.exports = {
 					const embed = new MessageEmbed()
 						.setColor(PURPLE)
 						.setTitle(name)
-						.setDescription(desc);
+						.setDescription(desc)
+						.setFooter(`${emoji} naviganter online...`);
 					interaction.reply({ embeds: [embed] });
 
 				}
@@ -54,7 +56,7 @@ module.exports = {
 			}
 		}
 		catch {
-			return interaction.reply({ embeds: [makeEmbed('ERROR: Name & description must each be less than 256 characters.', GREEN)] });
+			return interaction.reply({ embeds: [makeEmbed('ERROR: Name must be less than 256 characters.', GREEN)] });
 		}
 	},
 };

@@ -8,7 +8,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageActionRow, MessageButton, MessageSelectMenu } = require('discord.js');
 const { sequelize, getAllEmoji } = require('../datastuffs.js');
-const { makeEmbed } = require('../templates.js');
+const { makeEmbed, RED } = require('../templates.js');
 const { World, shuffleArray } = require('../worldgen.js');
 // const { sequelize, DISCLAIMER, makeSession, sync } = require('../datastuffs.js');
 
@@ -26,15 +26,18 @@ module.exports = {
 			return interaction.reply({ embeds: [makeEmbed('ERROR: A.S.H.E.S. has not been initialized in this reality. \n*Please `/register` A.S.H.E.S, and then `/install` it in your dwelling.*')] });
 		}
 
-
-		if ((await PlayersTable.findOne({ where: { userId: interaction.user.id } }))) {
-			return interaction.reply({ embeds: [makeEmbed('ERROR: you have already installed A.S.H.E.S! \n\n*if this is an issue for you, please bother cactus until she adds a way to reset player data.*')] });
-		}
-		const embed = makeEmbed(`This wizard will guide the installation of A.S.H.E.S.
+		let embed = makeEmbed(`This wizard will guide the installation of A.S.H.E.S.
 
 It is recommended that you turn off all other appliances before starting the setup. This will make it possible to update relevant system structures without having to reboot your dwelling.
 
 Please open the Installation Wizard Thread below to continue.`);
+
+		if ((await PlayersTable.findOne({ where: { userId: interaction.user.id } }))) {
+			embed = makeEmbed(`***WARNING***: A.S.H.E.S. already registered.
+Completing this wizard will __WIPE ALL YOUR PREVIOUS CHARACTER DATA.__
+If you do not wish to do this, you may safely ignore this thread.`, RED);
+		}
+
 
 		const d = new Date();
 		const time = d.getTime();
@@ -82,31 +85,14 @@ Please open the Installation Wizard Thread below to continue.`);
 
 		confOne.on('collect', async i => {
 			if (i.user.id === interaction.user.id) {
-				const messageTwo = await i.reply(questionTwo());
+				const messageTwo = await i.reply(await questionTwo());
 
-				// REACTION CODE
-				const MAX_REACTIONS = 20;
-				let emoji = getAllEmoji();
-				emoji = shuffleArray(emoji);
-				console.log(emoji);
-				for (let j = 0; i < MAX_REACTIONS; i++) {
-					messageTwo.react(emoji[j]);
-				}
-
-				const filter = (reaction, user) => {
-					user.id === interaction.author.id;
-				};
-
-				const updateTwo = await messageTwo.createReactionCollector({ filter, time: 15000 });
-
-				updateTwo.on('collect', (reaction, user) => {
-					console.log(`Collected ${reaction.emoji.name} from ${user.tag}`);
-					newPlayerData.naviganter = reaction.emoji.name;
-				});
 				const confTwo = messageTwo.createMessageComponentCollector({ componentType: 'BUTTON', time: 600000 });
 
 				confTwo.on('collect', async j => {
 					if (j.user.id === interaction.user.id) {
+						newPlayerData.naviganter = j.customId;
+
 						const messageThree = await j.reply(questionThree());
 
 						const confThree = await messageThree.createMessageComponentCollector({ componentType: 'BUTTON', time: 600000 });
@@ -260,22 +246,56 @@ function q1r3(placeholder = 'Urban') {
 		);
 }
 
-function questionTwo(emoji = '❓') {
+async function questionTwo() {
+	console.log('making 2nd question...');
 	const embed = makeEmbed(`**A WISP OF SMOKE EMERGES.**
 	
 Next, you will chose a seed for your *Naviganter*. The Naviganter will serve as a guide in A.S.H.E.S., and is a key component in the endgame construction of an *Arc*.
-Naviganter seeds are represented via Emojis.
-__Please react to this message with an Emoji, and then press the button to continue.__`);
+Naviganter seeds are represented via Emojis. We have gathered a random selection of potential seeds for you to choose from.
+
+**WARNING:** A.S.H.E.S. recommends against employing any already sentient being with your naviganter.
+
+__Please select the seed you wish to use.__`);
+
+	let emojis = await getAllEmoji();
+	emojis = shuffleArray(emojis);
+	console.log(emojis);
+	const rows = [];
+
+	const EmojisTable = await sequelize.model('emojis');
 
 
-	const button = new MessageActionRow()
-		.addComponents(
-			new MessageButton()
-				.setCustomId('yes')
-				.setLabel(`Seed with "${emoji}"`)
-				.setStyle('PRIMARY'),
+	for (let i = 0; i < 5; i++) {
+		const buttons = [];
+		for (let j = 0; j < 5; j++) {
+			const myEmoji = emojis[i * 5 + j];
+
+			let style = 'SECONDARY';
+			try {
+				const emojiData = await EmojisTable.findOne({ where: { symbol: myEmoji } });
+				const unsafe = await emojiData.get('unsafe');
+				if (unsafe) {
+					style = 'DANGER';
+				}
+			}
+			catch {
+				console.log('error');
+			}
+
+			const button = new MessageButton()
+				.setCustomId(myEmoji)
+				.setEmoji(myEmoji)
+				.setStyle(style);
+			buttons.push(button);
+		}
+
+		const row = new MessageActionRow().addComponents(
+			buttons[0], buttons[1], buttons[2], buttons[3], buttons[4],
 		);
-	return { embeds: [embed], components: [button], fetchReply: true };
+		rows.push(row);
+	}
+	console.log('finished making buttons!');
+	return { embeds: [embed], components: rows, fetchReply: true };
 }
 
 function questionThree() {

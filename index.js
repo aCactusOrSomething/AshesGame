@@ -17,7 +17,7 @@ for (const file of commandFiles) {
 
 client.once('ready', () => {
 	console.log('Ready!');
-	sequelize.sync({ force: true });
+	sequelize.sync();
 });
 
 client.on('interactionCreate', async interaction => {
