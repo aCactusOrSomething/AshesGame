@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
-const sqlite3 = require('sqlite3');
+// const sqlite3 = require('sqlite3');
 
-new sqlite3.Database('database.sqlite');
+// new sqlite3.Database('database.sqlite');
 
 const sequelize = new Sequelize('db', 'user', 'password', {
 	host: 'localhost',
@@ -11,7 +11,7 @@ const sequelize = new Sequelize('db', 'user', 'password', {
 	},
 	logging: false,
 	// SQLite only
-	// storage: 'database.sqlite',
+	storage: 'database.sqlite',
 });
 
 function makeSession(id) {
