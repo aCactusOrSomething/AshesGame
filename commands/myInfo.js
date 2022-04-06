@@ -52,7 +52,7 @@ module.exports = {
 
 			}
 			catch {
-				return interaction.reply({ embeds: [makeEmbed('ERROR: A.S.H.E.S. has not been initialized in this reality. \n*Please `/register` A.S.H.E.S, and then `/install` it in your dwelling.*', GREEN)] });
+				return interaction.reply({ embeds: [makeEmbed('ERROR: Unable to access data. Is ASHES *Registered* for this server, and have you *Installed* it?', GREEN)] });
 			}
 		}
 		catch {

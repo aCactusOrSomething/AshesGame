@@ -137,10 +137,22 @@ async function getAllEmoji() {
 	return ret;
 }
 
+async function toArray(table) {
+	const ret = [];
+
+	let id = 1;
+	do {
+		const item = await table.findOne({ where: { id: id } });
+		ret.push(item);
+		id++;
+	} while (await table.findOne({ where: { id: id } }));
+}
+
 module.exports = {
 	sequelize: sequelize,
 	makeSession: makeSession,
 	syncSession: syncSession,
 	constructPools: constructPools,
 	getAllEmoji: getAllEmoji,
+	toArray: toArray,
 };
