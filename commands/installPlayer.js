@@ -13,112 +13,121 @@ const { World, shuffleArray } = require('../worldgen.js');
 // const { sequelize, DISCLAIMER, makeSession, sync } = require('../datastuffs.js');
 
 module.exports = {
+
 	data: new SlashCommandBuilder()
 		.setName('installplayer')
 		.setDescription('Submit yourself to the A.S.H.E.S. Join the game as a Player.'),
 	async execute(interaction) {
-
-		let PlayersTable;
+		await interaction.deferReply();
 		try {
-			PlayersTable = await sequelize.model(`${interaction.guildId}-Players`);
-		}
-		catch {
-			return interaction.reply({ embeds: [makeEmbed('ERROR: A.S.H.E.S. has not been initialized in this reality. \n*Please `/register` A.S.H.E.S, and then `/install` it in your dwelling.*')] });
-		}
+			let PlayersTable;
+			try {
+				PlayersTable = await sequelize.model(`${interaction.guildId}-Players`);
+			}
+			catch {
+				return interaction.editReply({ embeds: [makeEmbed('ERROR: A.S.H.E.S. has not been initialized in this reality. \n*Please `/register` A.S.H.E.S, and then `/install` it in your dwelling.*')] });
+			}
 
-		let embed = makeEmbed(`This wizard will guide the installation of A.S.H.E.S.
+			let embed = makeEmbed(`This wizard will guide the installation of A.S.H.E.S.
 
 It is recommended that you turn off all other appliances before starting the setup. This will make it possible to update relevant system structures without having to reboot your dwelling.
 
 Please open the Installation Wizard Thread below to continue.`);
 
-		if ((await PlayersTable.findOne({ where: { userId: interaction.user.id } }))) {
-			embed = makeEmbed(`***WARNING***: A.S.H.E.S. already registered.
+			if ((await PlayersTable.findOne({ where: { userId: interaction.user.id } }))) {
+				embed = makeEmbed(`***WARNING***: A.S.H.E.S. already registered.
 Completing this wizard will __WIPE ALL YOUR PREVIOUS CHARACTER DATA.__
 If you do not wish to do this, you may safely ignore this thread.`, RED);
-		}
-
-
-		const d = new Date();
-		const time = d.getTime();
-		let thread = null;
-		if (!interaction.channel.isThread()) {
-			await interaction.reply({ embeds: [embed] });
-			thread = await interaction.channel.threads.create({
-				name: `install-wizard-${time}`,
-				autoArchiveDuration: 60,
-				reason: 'Adding user',
-			});
-			await thread.members.add(interaction.user.id);
-		}
-		else {
-			await interaction.reply({ embeds: [makeEmbed('**ERROR.** Unable to create installation wizard thread.\n*this application will now close.*')] });
-			return false;
-		}
-
-
-		const newPlayerData = {
-			name: 'Lily Cypress',
-			description: 'A new A.S.H.E.S. player.',
-			id: interaction.user.id,
-			location: 'House',
-			size: 'Small',
-			environment: 'Urban',
-			naviganter: '❓',
-			landTraits: '❓,❔,⁉️',
-			time: false,
-
-		};
-		const messageOne = await thread.send(questionOne());
-		const updateOne = messageOne.createMessageComponentCollector({ componentType: 'SELECT_MENU', time: 600000 });
-		const confOne = messageOne.createMessageComponentCollector({ componentType: 'BUTTON', time: 600000 });
-
-		updateOne.on('collect', async i => {
-			if (i.user.id === interaction.user.id) {
-				newPlayerData[i.customId] = i.values[0];
-				await i.update(questionOne(newPlayerData.location, newPlayerData.size, newPlayerData.environment));
 			}
-			else {
-				i.reply({ content: 'These questions are not yours to answer.', ephemeral: true });
-			}
-		});
 
-		confOne.on('collect', async i => {
-			if (i.user.id === interaction.user.id) {
-				const messageTwo = await i.reply(await questionTwo());
 
-				const confTwo = messageTwo.createMessageComponentCollector({ componentType: 'BUTTON', time: 600000 });
-
-				confTwo.on('collect', async j => {
-					if (j.user.id === interaction.user.id) {
-						newPlayerData.naviganter = j.customId;
-
-						const messageThree = await j.reply(questionThree());
-
-						const confThree = await messageThree.createMessageComponentCollector({ componentType: 'BUTTON', time: 600000 });
-
-						confThree.on('collect', async k => {
-							if (k.user.id === interaction.user.id) {
-								if (k.customId == 'time') newPlayerData.time = true;
-								const reply = await addThePlayer(k, newPlayerData);
-								k.reply(reply);
-							}
-							else {
-								k.reply({ content: 'These questions are not yours to answer.', ephemeral: true });
-							}
-						});
-					}
-					else {
-						j.reply({ content: 'These questions are not yours to answer.', ephemeral: true });
-					}
+			const d = new Date();
+			const time = d.getTime();
+			let thread = null;
+			if (!interaction.channel.isThread()) {
+				await interaction.editReply({ embeds: [embed] });
+				thread = await interaction.channel.threads.create({
+					name: `install-wizard-${time}`,
+					autoArchiveDuration: 60,
+					reason: 'Adding user',
 				});
+				await thread.members.add(interaction.user.id);
 			}
 			else {
-				i.reply({ content: 'These questions are not yours to answer.', ephemeral: true });
+				await interaction.reply({ embeds: [makeEmbed('**ERROR.** Unable to create installation wizard thread.\n*this application will now close.*')] });
+				return false;
 			}
-		});
+
+
+			const newPlayerData = {
+				name: 'Lily Cypress',
+				description: 'A new A.S.H.E.S. player.',
+				id: interaction.user.id,
+				location: 'House',
+				size: 'Small',
+				environment: 'Urban',
+				naviganter: '❓',
+				landTraits: '❓,❔,⁉️',
+				time: false,
+
+			};
+			const messageOne = await thread.send(questionOne());
+			const updateOne = messageOne.createMessageComponentCollector({ componentType: 'SELECT_MENU', time: 600000 });
+			const confOne = messageOne.createMessageComponentCollector({ componentType: 'BUTTON', time: 600000 });
+
+			updateOne.on('collect', async i => {
+				if (i.user.id === interaction.user.id) {
+					newPlayerData[i.customId] = i.values[0];
+					await i.update(questionOne(newPlayerData.location, newPlayerData.size, newPlayerData.environment));
+				}
+				else {
+					i.reply({ content: 'These questions are not yours to answer.', ephemeral: true });
+				}
+			});
+
+			confOne.on('collect', async i => {
+				if (i.user.id === interaction.user.id) {
+					await i.deferReply();
+					const messageTwo = await i.editReply(await questionTwo());
+
+					const confTwo = messageTwo.createMessageComponentCollector({ componentType: 'BUTTON', time: 600000 });
+
+					confTwo.on('collect', async j => {
+						if (j.user.id === interaction.user.id) {
+							newPlayerData.naviganter = j.customId;
+
+							await j.deferReply();
+							const messageThree = await j.editReply(questionThree());
+
+							const confThree = await messageThree.createMessageComponentCollector({ componentType: 'BUTTON', time: 600000 });
+
+							confThree.on('collect', async k => {
+								if (k.user.id === interaction.user.id) {
+									if (k.customId == 'time') newPlayerData.time = true;
+									const reply = await addThePlayer(k, newPlayerData);
+									k.reply(reply);
+								}
+								else {
+									k.reply({ content: 'These questions are not yours to answer.', ephemeral: true });
+								}
+							});
+						}
+						else {
+							j.reply({ content: 'These questions are not yours to answer.', ephemeral: true });
+						}
+					});
+				}
+				else {
+					i.reply({ content: 'These questions are not yours to answer.', ephemeral: true });
+				}
+			});
+		}
+		catch (error) {
+			console.log(error);
+		}
 
 	},
+
 };
 
 function nextButton() {
@@ -247,7 +256,6 @@ function q1r3(placeholder = 'Urban') {
 }
 
 async function questionTwo() {
-	console.log('making 2nd question...');
 	const embed = makeEmbed(`**A WISP OF SMOKE EMERGES.**
 	
 Next, you will chose a seed for your *Naviganter*. The Naviganter will serve as a guide in A.S.H.E.S., and is a key component in the endgame construction of an *Arc*.
@@ -259,7 +267,6 @@ __Please select the seed you wish to use.__`);
 
 	let emojis = await getAllEmoji();
 	emojis = shuffleArray(emojis);
-	console.log(emojis);
 	const rows = [];
 
 	const EmojisTable = await sequelize.model('emojis');
@@ -294,7 +301,6 @@ __Please select the seed you wish to use.__`);
 		);
 		rows.push(row);
 	}
-	console.log('finished making buttons!');
 	return { embeds: [embed], components: rows, fetchReply: true };
 }
 
@@ -334,13 +340,13 @@ async function addThePlayer(interaction, playerData) {
 			description: playerData.description,
 			naviganter: playerData.naviganter,
 			time: playerData.time,
+			location: playerData.id,
 		});
 
 		// TODO this is where world gen data goes!
 		let historyEmoji = await PoolsTable.findOne({ where: { name: 'historyEmoji' } });
 		historyEmoji = await historyEmoji.get('data');
 		historyEmoji = historyEmoji.split(',');
-		console.log(historyEmoji);
 		const world = new World(historyEmoji, []);
 
 		let land = null;
@@ -362,7 +368,7 @@ async function addThePlayer(interaction, playerData) {
 
 		const embed = makeEmbed(
 			`**THE FLAMES CONSUME.**\n\n**THE FLAMES CONSUME ALL.**\n\nThank you for installing the Apocalypse Safe Haven Evacuation Protocol (*A.S.H.E.S.*). You will awaken at The End Of The World.\n\n*your abode emerges in a land full of: ${land.traits[0]}, ${land.traits[1]}, and ${land.traits[2]}.\n\n*You may now use \`/myinfo\` to write a name and description for yourself.*`);
-
+		// TODO tTHIS CAUSES A CRASH.
 		return { embeds: [embed], fetchReply: true };
 	}
 	catch (error) {

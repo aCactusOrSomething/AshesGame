@@ -10,6 +10,7 @@ module.exports = {
 		.addStringOption(option => option.setName('name').setDescription('change your name.'))
 		.addStringOption(option => option.setName('description').setDescription('change your description.')),
 	async execute(interaction) {
+		await interaction.deferReply();
 		try {
 			const newName = interaction.options.getString('name');
 			const newDesc = interaction.options.getString('description');
@@ -20,8 +21,6 @@ module.exports = {
 
 				try {
 					const playerData = await PlayersTable.findOne({ where: { userId: interaction.user.id } });
-					if (playerData) console.log('playerData loaded.');
-
 
 					let name = await playerData.get('name');
 					let desc = await playerData.get('description');
@@ -43,20 +42,20 @@ module.exports = {
 						.setTitle(name)
 						.setDescription(desc)
 						.setFooter(`${emoji} naviganter online...`);
-					interaction.reply({ embeds: [embed] });
+					interaction.editReply({ embeds: [embed] });
 
 				}
 				catch {
-					return interaction.reply({ embeds: [makeEmbed('ERROR: unable to access data from the future. \n*Please `/install` A.S.H.E.S. to gain access.*', GREEN)] });
+					return interaction.editReply({ embeds: [makeEmbed('ERROR: unable to access data from the future. \n*Please `/install` A.S.H.E.S. to gain access.*', GREEN)] });
 				}
 
 			}
 			catch {
-				return interaction.reply({ embeds: [makeEmbed('ERROR: Unable to access data. Is ASHES *Registered* for this server, and have you *Installed* it?', GREEN)] });
+				return interaction.editReply({ embeds: [makeEmbed('ERROR: Unable to access data. Is ASHES *Registered* for this server, and have you *Installed* it?', GREEN)] });
 			}
 		}
 		catch {
-			return interaction.reply({ embeds: [makeEmbed('ERROR: Name must be less than 256 characters.', GREEN)] });
+			return interaction.editReply({ embeds: [makeEmbed('ERROR: Name must be less than 256 characters.', GREEN)] });
 		}
 	},
 };

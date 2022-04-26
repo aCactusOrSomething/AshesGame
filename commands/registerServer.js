@@ -9,6 +9,7 @@ module.exports = {
 		.setName('registerserver')
 		.setDescription('Initialize A.S.H.E.S. for this reality. Start a New Game in this server.'),
 	async execute(interaction) {
+		await interaction.deferReply();
 		try {
 
 			let confirmationText = '**A.S.H.E.S. is an apocalypse evacuation protocol. Do not introduce it to this reality unless it is already doomed.\n\nDo you still wish to continue?**';
@@ -50,26 +51,28 @@ DUST TO DUST
 FAN THE FIRE, EMBRACE THE FLAMES**\
 \`\`\`
 ${loadingHints}
-INITIALIZING APOCALYPSE SAFE HAVEN EVACUATION SYSTEM (A.S.H.E.S.)\`\`\`
+INITIALIZING APOCALYPSE SAFE HAVEN EVACUATION SYSTEM (A.S.H.E.S.)\`\`\` 
 							
 *Program initialized. please have each user /installplayer to continue...*`, GREEN);
 					await i.update({ embeds: [nEmbed], components: [] });
 					const myWorld = worldData.world;
-					await syncSession(schemas, myWorld, true);
-					// await constructPools(await synchedSchemas, myWorld);
+					await syncSession(schemas, myWorld, true, true);
+
+					const GuildsTable = await sequelize.model('Guilds');
+					GuildsTable.create({ guildId: interaction.guildId });
 				}
 				else if (i.customId === 'no') {
 					const nEmbed = makeEmbed('***ABORTED.***');
-					await i.update({ embeds: [nEmbed], components: [] });
+					return await i.update({ embeds: [nEmbed], components: [] });
 				}
 			});
 
-			return interaction.reply({ embeds: [embed], components: [row] });
+			return interaction.editReply({ embeds: [embed], components: [row] });
 
 
 		}
 		catch (error) {
-			return interaction.reply(`Something went wrong. ${error}`);
+			return interaction.editReply(`Something went wrong. ${error}`);
 		}
 	},
 };

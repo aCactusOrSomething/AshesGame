@@ -1,9 +1,7 @@
 const fs = require('fs');
 const { Client, Collection, Intents } = require('discord.js');
 const { token } = require('./config.json');
-const { sequelize } = require('./datastuffs.js');
-const { makeEmoji } = require('./emojimaker.js');
-
+const { sequelize, setup } = require('./datastuffs.js');
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
@@ -17,14 +15,20 @@ for (const file of commandFiles) {
 
 client.once('ready', () => {
 	console.log('Ready!');
-	sequelize.sync({ force: false });
+	setup();
+	try {
+		sequelize.authenticate();
+		console.log('database connection achieved!');
+	}
+	catch (error) {
+		console.log('unable to connect to database', error);
+	}
 });
 
 client.on('interactionCreate', async interaction => {
 	if (!interaction.isCommand()) return;
 
 	const command = client.commands.get(interaction.commandName);
-
 	if (!command) return;
 
 	try {
@@ -38,4 +42,6 @@ client.on('interactionCreate', async interaction => {
 
 client.login(token);
 
-makeEmoji();
+// UNCOMMENT THESE WHEN YOU NEED EMOJI MAKING
+// const { makeEmoji } = require('./emojimaker.js');
+// makeEmoji();

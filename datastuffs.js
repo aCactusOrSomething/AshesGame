@@ -3,7 +3,7 @@ const Sequelize = require('sequelize');
 
 // new sqlite3.Database('database.sqlite');
 
-const sequelize = new Sequelize('db', 'user', 'password', {
+const sequelize = new Sequelize({
 	host: 'localhost',
 	dialect: 'sqlite',
 	dialectOptions: {
@@ -13,6 +13,29 @@ const sequelize = new Sequelize('db', 'user', 'password', {
 	// SQLite only
 	storage: 'database.sqlite',
 });
+
+async function setup() {
+	const guilds = sequelize.define('Guilds', {
+		guildId: {
+			type: Sequelize.STRING,
+			unique: true,
+		},
+	});
+
+	await guilds.sync();
+
+	const guildArray = await toArray(guilds);
+
+	syncAllSessions(guildArray);
+	sequelize.sync();
+}
+
+function syncAllSessions(guilds) {
+	for (let i = 0; i < guilds.length; i++) {
+		const schemas = makeSession(guilds[i].guildId);
+		syncSession(schemas, null);
+	}
+}
 
 function makeSession(id) {
 	const players = sequelize.define(`${id}-Players`, { // PLAYER DATA
@@ -29,6 +52,9 @@ function makeSession(id) {
 		naviganter: { type: Sequelize.STRING },
 		time: { // are you using TIME?
 			type: Sequelize.BOOLEAN,
+		},
+		location: { // userID corresponding to the players location in World
+			type: Sequelize.STRING,
 		},
 	});
 
@@ -83,12 +109,14 @@ function makeSession(id) {
 
 }
 
-async function syncSession(schemas, worldData, force = false) {
+async function syncSession(schemas, worldData, force = false, genPools = false) {
 	await schemas.players.sync({ force: force });
 	await schemas.world.sync({ force: force });
 	await schemas.ships.sync({ force: force });
 	await schemas.pools.sync({ force: force });
-	await constructPools(schemas, worldData);
+	if (genPools) {
+		await constructPools(schemas, worldData);
+	}
 	return schemas;
 }
 
@@ -146,9 +174,11 @@ async function toArray(table) {
 		ret.push(item);
 		id++;
 	} while (await table.findOne({ where: { id: id } }));
+	return ret;
 }
 
 module.exports = {
+	setup: setup,
 	sequelize: sequelize,
 	makeSession: makeSession,
 	syncSession: syncSession,
