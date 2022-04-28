@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { sequelize, toArray } = require('../datastuffs.js');
+const { sequelize, tableToArray } = require('../datastuffs.js');
 const { MessageButton, MessageActionRow, MessageSelectMenu } = require('discord.js');
 const { makeEmbed, GREEN } = require('../templates.js');
 
@@ -15,7 +15,7 @@ module.exports = {
 		await interaction.deferReply();
 		try {
 			const WorldsTable = await sequelize.model(`${interaction.guildId}-Worlds`);
-			const WorldsArray = await toArray(WorldsTable);
+			const WorldsArray = await tableToArray(WorldsTable);
 			const PlayersTable = await sequelize.model(`${interaction.guildId}-Players`);
 			try {
 				let counter = 0;
@@ -49,15 +49,23 @@ module.exports = {
 							const buttons = await travelButtonMenu(WorldsArray, counter);
 							content.push(buttons);
 						}
-						await i.update({ embeds: [makeEmbed('TKTK')], components: content });
+						await i.update({
+							embeds: [makeEmbed('Please select a new location to travel to.\nDifferent Areas have different Materials you can gather on `/quest`s.')], components: content,
+						});
 					}
 					else {
 
 						await PlayersTable.update({ location: i.customId }, { where: { userId: interaction.user.id } });
-						await i.update({ embeds: [makeEmbed('TRAVEL SUCCESSFULL.\nTKTK')], components: [] });
+						await i.update({ embeds: [makeEmbed('**TRAVEL SUCCESSFUL.** Enjoy your stay.')], components: [] });
 					}
-				},
-				);
+				});
+
+
+				const wrongFilter = i => i.user.id != interaction.user.id;
+				const wrongCollector = interaction.channel.createMessageComponentCollector({ wrongFilter, time: 15000 });
+				wrongCollector.on('collect', async i => {
+					i.reply({ content: 'These questions are not yours to answer.', ephemeral: true });
+				});
 			}
 			catch (error) {
 				console.log(error);

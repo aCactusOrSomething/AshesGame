@@ -1,9 +1,6 @@
 TODO
-delete playerdata command
 clean up output texts
 land info command
-get rid of automatic database clearing
-emoji prototyping
 
 
 database tables

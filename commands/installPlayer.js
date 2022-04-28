@@ -343,7 +343,6 @@ async function addThePlayer(interaction, playerData) {
 			location: playerData.id,
 		});
 
-		// TODO this is where world gen data goes!
 		let historyEmoji = await PoolsTable.findOne({ where: { name: 'historyEmoji' } });
 		historyEmoji = await historyEmoji.get('data');
 		historyEmoji = historyEmoji.split(',');
@@ -368,7 +367,6 @@ async function addThePlayer(interaction, playerData) {
 
 		const embed = makeEmbed(
 			`**THE FLAMES CONSUME.**\n\n**THE FLAMES CONSUME ALL.**\n\nThank you for installing the Apocalypse Safe Haven Evacuation Protocol (*A.S.H.E.S.*). You will awaken at The End Of The World.\n\n*your abode emerges in a land full of: ${land.traits[0]}, ${land.traits[1]}, and ${land.traits[2]}.\n\n*You may now use \`/myinfo\` to write a name and description for yourself.*`);
-		// TODO tTHIS CAUSES A CRASH.
 		return { embeds: [embed], fetchReply: true };
 	}
 	catch (error) {

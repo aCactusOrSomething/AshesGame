@@ -24,7 +24,7 @@ async function setup() {
 
 	await guilds.sync();
 
-	const guildArray = await toArray(guilds);
+	const guildArray = await tableToArray(guilds);
 
 	syncAllSessions(guildArray);
 	sequelize.sync();
@@ -55,6 +55,15 @@ function makeSession(id) {
 		},
 		location: { // userID corresponding to the players location in World
 			type: Sequelize.STRING,
+		},
+		fuel: {
+			type: Sequelize.DOUBLE,
+		},
+		supplies: {
+			type: Sequelize.DOUBLE,
+		},
+		structure: {
+			type: Sequelize.DOUBLE,
 		},
 	});
 
@@ -165,7 +174,7 @@ async function getAllEmoji() {
 	return ret;
 }
 
-async function toArray(table) {
+async function tableToArray(table) {
 	const ret = [];
 
 	let id = 1;
@@ -184,5 +193,5 @@ module.exports = {
 	syncSession: syncSession,
 	constructPools: constructPools,
 	getAllEmoji: getAllEmoji,
-	toArray: toArray,
+	tableToArray: tableToArray,
 };
