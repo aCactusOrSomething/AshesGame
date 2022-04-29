@@ -183,6 +183,9 @@ async function tableToArray(table) {
 		ret.push(item);
 		id++;
 	} while (await table.findOne({ where: { id: id } }));
+
+	// this is GODAWFUL form but noone will stop me.
+	if (ret[0] === null) return [];
 	return ret;
 }
 

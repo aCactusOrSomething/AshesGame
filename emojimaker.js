@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
 const { sequelize } = require('./datastuffs.js');
 
+
 async function makeEmoji() {
 	// define it first
 	const Emoji = await sequelize.define('emojis', { // DATABASE ON EMOJI VALUES
@@ -21,11 +22,10 @@ async function makeEmoji() {
 		},
 		danger: { type: Sequelize.DOUBLE },
 	});
-
 	// now make one
-	(Emoji.sync({ force: true })).then(() => {
+	(Emoji.sync()).then(() => {
 		setTimeout(function() {
-			addEmoji(Emoji);
+			// addEmoji(Emoji);
 		}, 5000);
 	});
 

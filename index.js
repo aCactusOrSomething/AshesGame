@@ -42,6 +42,5 @@ client.on('interactionCreate', async interaction => {
 
 client.login(token);
 
-// UNCOMMENT THESE WHEN YOU NEED EMOJI MAKING
-// const { makeEmoji } = require('./emojimaker.js');
-// makeEmoji();
+const { makeEmoji } = require('./emojimaker.js');
+makeEmoji();

@@ -33,7 +33,6 @@ module.exports = {
 				);
 			const embed = makeEmbed(confirmationText, color);
 
-			// const filter = i => i.customId === 'yes';
 
 			const collector = interaction.channel.createMessageComponentCollector({ time: 15000 });
 

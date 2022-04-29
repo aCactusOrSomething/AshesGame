@@ -27,11 +27,13 @@ module.exports = {
 				}
 				interaction.editReply({ embeds: [makeEmbed('TKTK')], components: content });
 
-				const filter = i => i.user.id === interaction.user.id;
-
-				const collector = interaction.channel.createMessageComponentCollector({ filter, time: 15000 });
+				const collector = interaction.channel.createMessageComponentCollector({ time: 15000 });
 
 				collector.on('collect', async i => {
+					if (i.user.id !== interaction.user.id) {
+						await i.reply({ content: 'These questions are not yours to answer.', ephemeral: true });
+						return;
+					}
 					let move = false;
 					if (i.customId === 'back') {
 						counter--;
@@ -55,17 +57,11 @@ module.exports = {
 					}
 					else {
 
-						await PlayersTable.update({ location: i.customId }, { where: { userId: interaction.user.id } });
+						await PlayersTable.update({ location: i.value }, { where: { userId: interaction.user.id } });
 						await i.update({ embeds: [makeEmbed('**TRAVEL SUCCESSFUL.** Enjoy your stay.')], components: [] });
 					}
 				});
 
-
-				const wrongFilter = i => i.user.id != interaction.user.id;
-				const wrongCollector = interaction.channel.createMessageComponentCollector({ wrongFilter, time: 15000 });
-				wrongCollector.on('collect', async i => {
-					i.reply({ content: 'These questions are not yours to answer.', ephemeral: true });
-				});
 			}
 			catch (error) {
 				console.log(error);
