@@ -2,8 +2,7 @@ const Sequelize = require('sequelize');
 const { sequelize } = require('./datastuffs.js');
 
 
-async function makeEmoji() {
-	// define it first
+async function defineEmoji() {
 	const Emoji = await sequelize.define('emojis', { // DATABASE ON EMOJI VALUES
 		symbol: { // emoji symbol
 			type: Sequelize.STRING,
@@ -22,10 +21,17 @@ async function makeEmoji() {
 		},
 		danger: { type: Sequelize.DOUBLE },
 	});
+	Emoji.sync();
+	return Emoji;
+}
+
+async function makeEmoji() {
+	// define it first
+	const Emoji = await defineEmoji();
 	// now make one
-	(Emoji.sync()).then(() => {
+	(Emoji.sync({ force: true })).then(() => {
 		setTimeout(function() {
-			// addEmoji(Emoji);
+			addEmoji(Emoji);
 		}, 5000);
 	});
 
@@ -34,6 +40,7 @@ async function makeEmoji() {
 }
 
 module.exports = {
+	defineEmoji: defineEmoji,
 	makeEmoji: makeEmoji,
 };
 
