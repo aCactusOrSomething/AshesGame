@@ -23,12 +23,12 @@ const HISTORIES = [
 	{ flavor: 'Atlantis Discovered.', emoji: ['🐟', '🔱', '🐠'], npcTypes: ['Atlantean', 'mermaid'] }, // -Atlantis surfaces as a world power // neb
 	{ flavor: 'ERROR: Critical lack of pollinators.', emoji: ['🐝', '❌', '🥀', '💀'], npcTypes: ['ghastly bee', 'haunted flower'] }, // -bee extinction // neb
 	{ flavor: 'Alpha! Recruit a team of teenagers with attitue!', emoji: ['🦖', '🦕', '🦸', '🤖', '🧙‍♀️', '🌁', '🌕'], npcTypes: ['power ranger', 'giant monster', 'evil moon witch'] }, // -power rangers // broon
-	// -horny milfs leave all areas // neb
-	// the shattering // egg
-	// the magpies have successfully unionized to destroy Mars // reddy
-	// Earth's OS became incompatible with the firmware of the Core, leading to major heat sink issues // shogun
-	// -Pluto really isn't a planet // shogun
-	// -The lights beyond the solar system are not stars // shogun
+	// I CANT FIND A WAY TO DO THIS ONE. // -horny milfs leave all areas // neb
+	{ flavor: 'Defragmentation of Physical law required.', emoji: ['💍', '✌️', '🌳'], npcTypes: ['tarnished', 'Shardbearer'] }, // the shattering // egg
+	{ flavor: 'Importing magpie.ash from /mars/...', emoji: ['♂️', '🦤', '🌳'], npcTypes: ['Martian', 'Magpie'] }, // the magpies have successfully unionized to destroy Mars // reddy
+	{ flavor: 'WARNING: planetary temperatures exceeding maximum levels.', emoji: ['🌋', '⭕', '🌡️'], npcTypes: ['Heat Sink', 'Core Touched'] }, // Earth's OS became incompatible with the firmware of the Core, leading to major heat sink issues // shogun
+	// I CANT FIND A WAY TO DO THIS ONE. // -Pluto really isn't a planet // shogun
+	{ flavor: 'False stars detected.', emoji: ['⭐', '🌟', '🌠', '💫', '✨'], npcTypes: ['Star', '"Star"'] }, // -The lights beyond the solar system are not stars // shogun
 	// -Saturn's Rings have disappeared // shogun
 	{ flavor: 'WARNING: Watch for falling space colonies!', emoji: ['🤖', '🛰️', '☄️', '🌌', '👨‍🚀️', '📡', '🌕'], npcTypes: ['mecha pilot', 'newtype'] }, // -gundam // broon
 	{ flavor: 'Death has recruited her champions!', emoji: ['🐦', '⏪', '🪨', '🎨'], npcTypes: ['heir', 'businesswoman', 'sculptor'] }, // -medley // neb
@@ -36,12 +36,12 @@ const HISTORIES = [
 	{ flavor: 'Reconciling form and function...', emoji: ['🤖', '🛰️', '📡', '🏛️', '🖥️', '🛸 ', '📿', '🔄', '🛐'], npcTypes: ['mantle', 'elect', 'exalt', 'decrepit god-machine'] }, // -mantles // broon
 	{ flavor: 'Randomly distributing magic...', emoji: ['🪄', '✨', '✴️'], npcTypes: ['magician', 'sage'] }, // -magic is suddenly very real which sucks // may
 	{ flavor: 'Cutting the deck...', emoji: ['♣️', '♠️', '♥️', '♦️', '🃏'], npcTypes: ['jack', 'queen', 'king', 'ace', 'joker'] }, // -playing cards // broon
-	// 🦑-The Dark Gods have returned // neb
-	// 🕸 - The Internet vanishes // neb
-	// 🌪-Witches appear and begin to wreck havoc // neb
-	// -Elephant’s Foot brief exposure event // ollie
-	// -the inauguration of the 69th president of the United States, Jeremy Elbertson // ollie
-	// -Sudden Invasion of Earth by an Anarchical Cult // ollie
+	{ flavor: 'Illuminating Dark gods...', emoji: ['🦑', '🐙'], npcTypes: ['UNKNOWN', 'cultist'] }, // 🦑-The Dark Gods have returned // neb
+	{ flavor: 'ERROR: Unable to restore Internet.', emoji: ['💾', '🕸', ], npcTypes: ['Moderator'] }, // 🕸 - The Internet vanishes // neb
+	{ flavor: 'C.O.V.E.N. Process Enabled.', emoji: ['🌪'], npcTypes: ['Witch', 'Wizard'] }, // 🌪-Witches appear and begin to wreck havoc // neb
+	{ flavor: 'WARNING: Background radiation critical.', emoji: ['🐘', '👞', '☢️'], npcTypes: ['Elephant'] }, // -Elephant’s Foot brief exposure event // ollie
+	{ flavor: 'Chat disabled during inauguration livestream.', emoji: ['☕' ], npcTypes: ['Senator985' ] }, // -the inauguration of the 69th president of the United States, Jeremy Elbertson // ollie
+	{ flavor: 'Establishment Disestablished.', emoji: ['🅰️', '👽' ], npcTypes: ['anarchist'] }, // -Sudden Invasion of Earth by an Anarchical Cult // ollie
 	{ flavor: 'Enabling jiggle physics…', emoji: ['🍈', '🎈'], npcTypes: ['onee-san', 'vrchat user'] }, // -hotted boobs up ahead // neb
 	{ flavor: 'Making sure it\'s not Monday…', emoji: ['🐱', '🐈', '🐈‍⬛'], npcTypes: ['cartoonist', 'lasagna eaters'] }, // -sunny
 ];
