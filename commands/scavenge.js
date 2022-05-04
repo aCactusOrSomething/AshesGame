@@ -37,7 +37,7 @@ module.exports = {
 			}
 
 			// OK next step, i build 3 buttons for each emoji.
-			const scavengeButtons = await scavengeButtonMenu(emojiData);
+			const scavengeButtons = await scavengeButtonMenu(emojiData, worldEmojis);
 			const text = 'These are the available materials in this area. Please choose one to focus on for this expidition.\n\nMaterials with a higher DANGER increase your risk of interference from a third party.';
 			await interaction.editReply({ embeds: [makeEmbed(text, PURPLE)], components: [scavengeButtons] });
 
@@ -55,7 +55,8 @@ module.exports = {
 				let newStructure = 0;
 
 				let interruptionText = '';
-				if (Math.random() * 100 <= await chosenEmoji.get('danger')) {
+				const rand = Math.random() * 100;
+				if ((chosenEmoji == null && rand <= 3) || (chosenEmoji != null && rand <= await chosenEmoji.get('danger'))) {
 					// TODO this is where you put the NPC interruption code, i think.
 					interruptionText = 'you would have met an NPC here, but i havent written that code yet.';
 				}
@@ -66,17 +67,30 @@ module.exports = {
 					const rand = Math.random() * emojiData.length;
 
 					let found = chosenEmoji;
+					let temp = i.customId;
 					for (let k = 0; k < emojiData.length; k++) {
 						if (rand < k + 1) {
-							found = emojiData[k];
+							temp = k;
 							k = emojiData.length + 5;
 						}
 					}
-					scavengingString = scavengingString + await found.get('symbol');
+					found = emojiData[temp];
 
-					newFuel += await found.get('fuel');
-					newSupplies += await found.get('lifesupport');
-					newStructure += await found.get('structure');
+
+					if (found != null) {
+						scavengingString = scavengingString + await found.get('symbol');
+
+						newFuel += await found.get('fuel');
+						newSupplies += await found.get('lifesupport');
+						newStructure += await found.get('structure');
+					}
+					else {
+						scavengingString = scavengingString + worldEmojis[temp];
+
+						newFuel += 1;
+						newSupplies += 1;
+						newStructure += 1;
+					}
 				}
 
 				await PlayersTable.update({
@@ -94,16 +108,27 @@ module.exports = {
 	},
 };
 
-async function scavengeButtonMenu(emojiData) {
+async function scavengeButtonMenu(emojiData, worldEmojis) {
 	const ret = new MessageActionRow();
 	for (let i = 0; i < emojiData.length; i++) {
-		ret.addComponents(
-			new MessageButton()
-				.setCustomId(`${i}`)
-				.setLabel(`Danger: ${await emojiData[i].get('danger')}`)
-				.setEmoji(`${await emojiData[i].get('symbol')}`)
-				.setStyle('PRIMARY'),
-		);
+		if (emojiData[i] != null) {
+			ret.addComponents(
+				new MessageButton()
+					.setCustomId(`${i}`)
+					.setLabel(`Danger: ${await emojiData[i].get('danger')}`)
+					.setEmoji(`${await emojiData[i].get('symbol')}`)
+					.setStyle('PRIMARY'),
+			);
+		}
+		else {
+			ret.addComponents(
+				new MessageButton()
+					.setCustomId(`${i}`)
+					.setLabel(`Danger: ${3}`)
+					.setEmoji(`${worldEmojis[i]}`)
+					.setStyle('PRIMARY'),
+			);
+		}
 	}
 	return ret;
 }

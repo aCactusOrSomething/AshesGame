@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageActionRow, MessageButton, Permissions } = require('discord.js');
 const { sequelize, makeSession, syncSession } = require('../datastuffs.js');
-const { makeEmbed, RED, PURPLE, GREEN } = require('../templates.js');
+const { makeEmbed, PURPLE, GREEN } = require('../templates.js');
 const { worldGen } = require('../worldgen.js');
 
 module.exports = {
@@ -14,11 +14,10 @@ module.exports = {
 			if (!interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
 				return interaction.editReply({ content:'You must be the Server Administrator to use this command.', ephemeral: true });
 			}
-			let confirmationText = '**A.S.H.E.S. is an apocalypse evacuation protocol. Do not introduce it to this reality unless it is already doomed.\n\nDo you still wish to continue?**';
-			let color = PURPLE;
+			const confirmationText = '**A.S.H.E.S. is an apocalypse evacuation protocol. Do not introduce it to this reality unless it is already doomed.\n\nDo you still wish to continue?**';
+			const color = PURPLE;
 			if (sequelize.isDefined(`${interaction.guildId}-Players`)) {
-				confirmationText = '**__This will reset A.S.H.E.S.__\n\n All data for this server will be __DELETED__, and replaced with a clean slate. \n\nAre you sure you want to do this?**';
-				color = RED;
+				return interaction.editReply({ content:'This server has already been initialized. You must `/deleteserver` first before registering as a new world.', ephemeral: true });
 			}
 
 			const schemas = makeSession(interaction.guildId);

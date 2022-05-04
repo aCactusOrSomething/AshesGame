@@ -35,9 +35,9 @@ It is recommended that you turn off all other appliances before starting the set
 Please open the Installation Wizard Thread below to continue.`);
 
 			if ((await PlayersTable.findOne({ where: { userId: interaction.user.id } }))) {
-				embed = makeEmbed(`***WARNING***: A.S.H.E.S. already registered.
-Completing this wizard will __WIPE ALL YOUR PREVIOUS CHARACTER DATA.__
-If you do not wish to do this, you may safely ignore this thread.`, RED);
+				embed = makeEmbed(`***WARNING***: You have already registered for A.S.H.E.S. on this server.
+If you wish to start anew, you must first \`/deleteplayer\`.`, RED);
+				return interaction.editReply({ embeds: [embed] });
 			}
 
 
