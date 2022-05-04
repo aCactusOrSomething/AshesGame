@@ -27,6 +27,7 @@ client.once('ready', () => {
 
 client.on('interactionCreate', async interaction => {
 	if (!interaction.isCommand()) return;
+	if (interaction.guild == null) return interaction.reply({ content: 'A.S.H.E.S. Cannot execute commands from a DM. Try using this within a server.', ephemeral: true });
 
 	const command = client.commands.get(interaction.commandName);
 	if (!command) return;
