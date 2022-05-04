@@ -23,11 +23,10 @@ const HISTORIES = [
 	{ flavor: 'Atlantis Discovered.', emoji: ['🐟', '🔱', '🐠'], npcTypes: ['Atlantean', 'mermaid'] }, // -Atlantis surfaces as a world power // neb
 	{ flavor: 'ERROR: Critical lack of pollinators.', emoji: ['🐝', '❌', '🥀', '💀'], npcTypes: ['ghastly bee', 'haunted flower'] }, // -bee extinction // neb
 	{ flavor: 'Alpha! Recruit a team of teenagers with attitue!', emoji: ['🦖', '🦕', '🦸', '🤖', '🧙‍♀️', '🌁', '🌕'], npcTypes: ['power ranger', 'giant monster', 'evil moon witch'] }, // -power rangers // broon
-	// I CANT FIND A WAY TO DO THIS ONE. // -horny milfs leave all areas // neb
+	
 	{ flavor: 'Defragmentation of Physical law required.', emoji: ['💍', '✌️', '🌳'], npcTypes: ['tarnished', 'Shardbearer'] }, // the shattering // egg
 	{ flavor: 'Importing magpie.ash from /mars/...', emoji: ['♂️', '🦤', '🌳'], npcTypes: ['Martian', 'Magpie'] }, // the magpies have successfully unionized to destroy Mars // reddy
 	{ flavor: 'WARNING: planetary temperatures exceeding maximum levels.', emoji: ['🌋', '⭕', '🌡️'], npcTypes: ['Heat Sink', 'Core Touched'] }, // Earth's OS became incompatible with the firmware of the Core, leading to major heat sink issues // shogun
-	// I CANT FIND A WAY TO DO THIS ONE. // -Pluto really isn't a planet // shogun
 	{ flavor: 'False stars detected.', emoji: ['⭐', '🌟', '🌠', '💫', '✨'], npcTypes: ['Star', '"Star"'] }, // -The lights beyond the solar system are not stars // shogun
 	// -Saturn's Rings have disappeared // shogun
 	{ flavor: 'WARNING: Watch for falling space colonies!', emoji: ['🤖', '🛰️', '☄️', '🌌', '👨‍🚀️', '📡', '🌕'], npcTypes: ['mecha pilot', 'newtype'] }, // -gundam // broon
@@ -42,8 +41,12 @@ const HISTORIES = [
 	{ flavor: 'WARNING: Background radiation critical.', emoji: ['🐘', '👞', '☢️'], npcTypes: ['Elephant'] }, // -Elephant’s Foot brief exposure event // ollie
 	{ flavor: 'Chat disabled during inauguration livestream.', emoji: ['☕' ], npcTypes: ['Senator985' ] }, // -the inauguration of the 69th president of the United States, Jeremy Elbertson // ollie
 	{ flavor: 'Establishment Disestablished.', emoji: ['🅰️', '👽' ], npcTypes: ['anarchist'] }, // -Sudden Invasion of Earth by an Anarchical Cult // ollie
-	{ flavor: 'Enabling jiggle physics…', emoji: ['🍈', '🎈'], npcTypes: ['onee-san', 'vrchat user'] }, // -hotted boobs up ahead // neb
 	{ flavor: 'Making sure it\'s not Monday…', emoji: ['🐱', '🐈', '🐈‍⬛'], npcTypes: ['cartoonist', 'lasagna eaters'] }, // -sunny
+
+	// unimplemented, due to either lack of ideas or wanting to keep this SFW. you two are bastards and i love you both.
+	// { flavor: 'Enabling jiggle physics…', emoji: ['🍈', '🎈'], npcTypes: ['onee-san', 'vrchat user'] }, // -hotted boobs up ahead // neb
+	// -horny milfs leave all areas // neb
+	// -Pluto really isn't a planet // shogun
 ];
 
 function shuffleArray(array) {
