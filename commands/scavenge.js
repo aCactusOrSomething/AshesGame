@@ -1,7 +1,10 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { sequelize } = require('../datastuffs.js');
 const { MessageButton, MessageActionRow } = require('discord.js');
-const { makeEmbed, GREEN, PURPLE } = require('../templates.js'); // use purple for normal exploration and green for combat interactions.
+const { makeEmbed, GREEN, PURPLE } = require('../templates.js'); // use purple for normal exploration and green for combat interactions.\
+
+const PAYOUT_NUMBER = 10;
+//
 
 /*
 	players go on a quest in their current area.
@@ -37,6 +40,52 @@ module.exports = {
 			const scavengeButtons = await scavengeButtonMenu(emojiData);
 			const text = 'These are the available materials in this area. Please choose one to focus on for this expidition.\n\nMaterials with a higher DANGER increase your risk of interference from a third party.';
 			await interaction.editReply({ embeds: [makeEmbed(text, PURPLE)], components: [scavengeButtons] });
+
+			// now i need to collect those.
+			const collector = interaction.channel.createMessageComponentCollector({ time: 15000 });
+			collector.on('collect', async i => {
+				if (i.user.id !== interaction.user.id) {
+					await i.reply({ content: 'These questions are not yours to answer.', ephemeral: true });
+					return;
+				}
+
+				const chosenEmoji = emojiData[i.customId];
+				let newFuel = 0;
+				let newSupplies = 0;
+				let newStructure = 0;
+
+				let interruptionText = '';
+				if (Math.random() * 100 <= await chosenEmoji.get('danger')) {
+					// TODO this is where you put the NPC interruption code, i think.
+					interruptionText = 'you would have met an NPC here, but i havent written that code yet.';
+				}
+
+				let scavengingString = '';
+
+				for (let j = 0; j < PAYOUT_NUMBER; j++) {
+					const rand = Math.random() * emojiData.length;
+
+					let found = chosenEmoji;
+					for (let k = 0; k < emojiData.length; k++) {
+						if (rand < k + 1) {
+							found = emojiData[k];
+							k = emojiData.length + 5;
+						}
+					}
+					scavengingString = scavengingString + await found.get('symbol');
+
+					newFuel += await found.get('fuel');
+					newSupplies += await found.get('lifesupport');
+					newStructure += await found.get('structure');
+				}
+
+				await PlayersTable.update({
+					fuel: await playerData.get('fuel') + newFuel,
+					structure: await playerData.get('structure') + newStructure,
+					supplies: await playerData.get('supplies') + newSupplies,
+				}, { where: { userId: interaction.user.id } });
+				await i.update({ embeds: [makeEmbed(`Scavenging successful.\n__RAW SALVAGE__:\n${scavengingString}\n\n__CONVERTED RESULTS:__\nFuel: ${newFuel}\nStructure: ${newStructure}\nSupplies: ${newSupplies}\n${interruptionText}`)], components: [] });
+			});
 		}
 		catch (error) {
 			await interaction.editReply({ embeds: [makeEmbed('ERROR: Unable to access data. Is ASHES *Registered* for this server, and have you *Installed* it?'), makeEmbed(error.toString())] });

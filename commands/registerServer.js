@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageActionRow, MessageButton } = require('discord.js');
+const { MessageActionRow, MessageButton, Permissions } = require('discord.js');
 const { sequelize, makeSession, syncSession } = require('../datastuffs.js');
 const { makeEmbed, RED, PURPLE, GREEN } = require('../templates.js');
 const { worldGen } = require('../worldgen.js');
@@ -11,7 +11,9 @@ module.exports = {
 	async execute(interaction) {
 		await interaction.deferReply();
 		try {
-
+			if (!interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
+				return interaction.editReply({ content:'You must be the Server Administrator to use this command.', ephemeral: true });
+			}
 			let confirmationText = '**A.S.H.E.S. is an apocalypse evacuation protocol. Do not introduce it to this reality unless it is already doomed.\n\nDo you still wish to continue?**';
 			let color = PURPLE;
 			if (sequelize.isDefined(`${interaction.guildId}-Players`)) {

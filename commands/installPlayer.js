@@ -10,7 +10,7 @@ const { MessageActionRow, MessageButton, MessageSelectMenu } = require('discord.
 const { sequelize, getAllEmoji } = require('../datastuffs.js');
 const { makeEmbed, RED } = require('../templates.js');
 const { World, shuffleArray } = require('../worldgen.js');
-// const { sequelize, DISCLAIMER, makeSession, sync } = require('../datastuffs.js');
+
 
 module.exports = {
 
@@ -341,6 +341,9 @@ async function addThePlayer(interaction, playerData) {
 			naviganter: playerData.naviganter,
 			time: playerData.time,
 			location: playerData.id,
+			fuel: 0,
+			supplies: 0,
+			structure: 0,
 		});
 
 		let historyEmoji = await PoolsTable.findOne({ where: { name: 'historyEmoji' } });
