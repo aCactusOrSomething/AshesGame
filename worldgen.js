@@ -28,7 +28,6 @@ const HISTORIES = [
 	{ flavor: 'Importing magpie.ash from /mars/...', emoji: ['♂️', '🦤', '🌳'], npcTypes: ['Martian', 'Magpie'] }, // the magpies have successfully unionized to destroy Mars // reddy
 	{ flavor: 'WARNING: planetary temperatures exceeding maximum levels.', emoji: ['🌋', '⭕', '🌡️'], npcTypes: ['Heat Sink', 'Core Touched'] }, // Earth's OS became incompatible with the firmware of the Core, leading to major heat sink issues // shogun
 	{ flavor: 'False stars detected.', emoji: ['⭐', '🌟', '🌠', '💫', '✨'], npcTypes: ['Star', '"Star"'] }, // -The lights beyond the solar system are not stars // shogun
-	// -Saturn's Rings have disappeared // shogun
 	{ flavor: 'WARNING: Watch for falling space colonies!', emoji: ['🤖', '🛰️', '☄️', '🌌', '👨‍🚀️', '📡', '🌕'], npcTypes: ['mecha pilot', 'newtype'] }, // -gundam // broon
 	{ flavor: 'Death has recruited her champions!', emoji: ['🐦', '⏪', '🪨', '🎨'], npcTypes: ['heir', 'businesswoman', 'sculptor'] }, // -medley // neb
 	{ flavor: 'HENSHIN!', emoji: ['🦸', '🦹', '🐜️', '🏍️', '🐞', '🐛'], npcTypes: ['kamen rider'] }, // -kamen rider // broon
@@ -47,6 +46,8 @@ const HISTORIES = [
 	// { flavor: 'Enabling jiggle physics…', emoji: ['🍈', '🎈'], npcTypes: ['onee-san', 'vrchat user'] }, // -hotted boobs up ahead // neb
 	// -horny milfs leave all areas // neb
 	// -Pluto really isn't a planet // shogun
+	// -Saturn's Rings have disappeared // shogun
+
 ];
 
 function shuffleArray(array) {
