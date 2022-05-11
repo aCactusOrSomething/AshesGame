@@ -14,6 +14,7 @@ module.exports = {
 
 		const PlayersTable = await sequelize.model(`${interaction.guildId}-Players`);
 		const WorldsTable = await sequelize.model(`${interaction.guildId}-Worlds`);
+		const ShipsTable = await sequelize.model(`${interaction.guildId}-Ships`);
 		// TODO need to check to see if the player exists before i delete them.
 
 		try {
@@ -40,9 +41,9 @@ module.exports = {
 		);
 
 		// deletion code
-		await interaction.editReply({ embeds: [text], components: [buttons] });
+		const reply = await interaction.editReply({ embeds: [text], components: [buttons] });
 
-		const collector = interaction.channel.createMessageComponentCollector({ time: 15000 });
+		const collector = reply.createMessageComponentCollector({ time: 15000 });
 		collector.on('collect', async i => {
 			if (i.user.id !== interaction.user.id) {
 				await i.reply({ content: 'These questions are not yours to answer.', ephemeral: true });
@@ -54,6 +55,9 @@ module.exports = {
 					where: { userId: `${interaction.user.id}` },
 				});
 				await WorldsTable.destroy({
+					where: { userId: `${interaction.user.id}` },
+				});
+				await ShipsTable.destroy({
 					where: { userId: `${interaction.user.id}` },
 				});
 				await interaction.editReply({ embeds: [makeEmbed('DELETION PROCESSED.\n\n**RECORDS BURNED.**\n\n*Your character has been deleted successully. Thank you for playing!', RED)], components: [] });

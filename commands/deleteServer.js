@@ -45,9 +45,9 @@ module.exports = {
 		);
 
 		// deletion code
-		await interaction.editReply({ embeds: [text], components: [buttons] });
+		const reply = await interaction.editReply({ embeds: [text], components: [buttons] });
 
-		const collector = interaction.channel.createMessageComponentCollector({ time: 15000 });
+		const collector = reply.createMessageComponentCollector({ time: 15000 });
 		collector.on('collect', async i => {
 			if (i.user.id !== interaction.user.id) {
 				await i.reply({ content: 'These questions are not yours to answer.', ephemeral: true });
@@ -59,6 +59,12 @@ module.exports = {
 					where: { userId: `${interaction.user.id}` },
 				});
 				await WorldsTable.destroy({
+					where: { userId: `${interaction.user.id}` },
+				});
+				await PoolsTable.destroy({
+					where: { userId: `${interaction.user.id}` },
+				});
+				await ShipsTable.destroy({
 					where: { userId: `${interaction.user.id}` },
 				});
 				await interaction.editReply({ embeds: [makeEmbed('DELETION PROCESSED.\n\n**RECORDS BURNED.**\n\n*Your world has been abandoned. Thank you for playing!', RED)], components: [] });

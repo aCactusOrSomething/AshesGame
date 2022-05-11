@@ -34,8 +34,8 @@ module.exports = {
 				);
 			const embed = makeEmbed(confirmationText, color);
 
-
-			const collector = interaction.channel.createMessageComponentCollector({ time: 15000 });
+			const reply = await interaction.editReply({ embeds: [embed], components: [row] });
+			const collector = reply.createMessageComponentCollector({ time: 15000 });
 
 			collector.on('collect', async i => {
 				if (i.customId === 'yes') {
@@ -67,7 +67,7 @@ INITIALIZING APOCALYPSE SAFE HAVEN EVACUATION SYSTEM (A.S.H.E.S.)\`\`\`
 				}
 			});
 
-			return interaction.editReply({ embeds: [embed], components: [row] });
+			return;
 
 
 		}

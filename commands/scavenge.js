@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { sequelize } = require('../datastuffs.js');
 const { MessageButton, MessageActionRow } = require('discord.js');
-const { makeEmbed, GREEN, PURPLE } = require('../templates.js'); // use purple for normal exploration and green for combat interactions.\
+const { makeEmbed, PURPLE } = require('../templates.js'); // use purple for normal exploration and green for combat interactions.\
 
 const PAYOUT_NUMBER = 10;
 //
@@ -39,10 +39,10 @@ module.exports = {
 			// OK next step, i build 3 buttons for each emoji.
 			const scavengeButtons = await scavengeButtonMenu(emojiData, worldEmojis);
 			const text = 'These are the available materials in this area. Please choose one to focus on for this expidition.\n\nMaterials with a higher DANGER increase your risk of interference from a third party.';
-			await interaction.editReply({ embeds: [makeEmbed(text, PURPLE)], components: [scavengeButtons] });
+			const reply = await interaction.editReply({ embeds: [makeEmbed(text, PURPLE)], components: [scavengeButtons] });
 
 			// now i need to collect those.
-			const collector = interaction.channel.createMessageComponentCollector({ time: 15000 });
+			const collector = reply.createMessageComponentCollector({ time: 15000 });
 			collector.on('collect', async i => {
 				if (i.user.id !== interaction.user.id) {
 					await i.reply({ content: 'These questions are not yours to answer.', ephemeral: true });
@@ -55,8 +55,8 @@ module.exports = {
 				let newStructure = 0;
 
 				let interruptionText = '';
-				const rand = Math.random() * 100;
-				if ((chosenEmoji == null && rand <= 3) || (chosenEmoji != null && rand <= await chosenEmoji.get('danger'))) {
+				const randWeight = Math.random() * 100;
+				if ((chosenEmoji == null && randWeight <= 3) || (chosenEmoji != null && randWeight <= await chosenEmoji.get('danger'))) {
 					// TODO this is where you put the NPC interruption code, i think.
 					interruptionText = 'you would have met an NPC here, but i havent written that code yet.';
 				}

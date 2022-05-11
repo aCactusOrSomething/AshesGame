@@ -25,9 +25,9 @@ module.exports = {
 					const buttons = await travelButtonMenu(WorldsArray, counter);
 					content.push(buttons);
 				}
-				interaction.editReply({ embeds: [makeEmbed('TKTK')], components: content });
+				const reply = interaction.editReply({ embeds: [makeEmbed('TKTK')], components: content });
 
-				const collector = interaction.channel.createMessageComponentCollector({ time: 15000 });
+				const collector = reply.createMessageComponentCollector({ time: 15000 });
 
 				collector.on('collect', async i => {
 					if (i.user.id !== interaction.user.id) {
@@ -52,12 +52,12 @@ module.exports = {
 							content.push(buttons);
 						}
 						await i.update({
-							embeds: [makeEmbed('Please select a new location to travel to.\nDifferent Areas have different Materials you can gather on `/quest`s.')], components: content,
+							embeds: [makeEmbed('Please select a new location to travel to.\nDifferent Areas have different Materials you can gather through `/scavenge`.')], components: content,
 						});
 					}
 					else {
-
-						await PlayersTable.update({ location: i.value }, { where: { userId: interaction.user.id } });
+						console.log(i.values[0]);
+						await PlayersTable.update({ location: i.values[0] }, { where: { userId: interaction.user.id } });
 						await i.update({ embeds: [makeEmbed('**TRAVEL SUCCESSFUL.** Enjoy your stay.')], components: [] });
 					}
 				});

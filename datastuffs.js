@@ -174,9 +174,12 @@ async function getAllEmoji() {
 	return ret;
 }
 
+// NOBODY TOLD ME THERE WAS A FUNCTION FOR THIS ALREADY?????
+// old method preserved in comments. it does not work on any table that has had an entry removed. ever.
 async function tableToArray(table) {
+	return await table.findAll();
+	/*
 	const ret = [];
-
 	let id = 1;
 	do {
 		const item = await table.findOne({ where: { id: id } });
@@ -187,6 +190,7 @@ async function tableToArray(table) {
 	// this is GODAWFUL form but noone will stop me.
 	if (ret[0] === null) return [];
 	return ret;
+	*/
 }
 
 module.exports = {
