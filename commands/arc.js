@@ -27,8 +27,8 @@ module.exports = {
 			const ShipsArray = await tableToArray(ShipsTable);
 			const PlayersTable = await sequelize.model(`${interaction.guildId}-Players`);
 
-			const user = await PlayersTable.findOne({ where: { userId: interaction.user.id } });
-			await user.get('id');
+			const userData = await PlayersTable.findOne({ where: { userId: interaction.user.id } });
+			await userData.get('id');
 			let alreadyBoarded = false;
 			let chosenShipId;
 
@@ -58,7 +58,7 @@ module.exports = {
 					await myShip.get('id');
 				}
 				catch {
-					if (await user.get('time') != 1) {
+					if (await userData.get('time') != 1) {
 						canBuild = true;
 					}
 				}
@@ -135,8 +135,29 @@ module.exports = {
 					}
 					else if (state == COLLECT_STATES.BOARD) {
 						passengers.push(i.user.id);
-						await ShipsTable.update({ passengers:  passengers.toString() }, { where: { userId: chosenShipId } });
+						await ShipsTable.update({ passengers: passengers.toString() }, { where: { userId: chosenShipId } });
 						await i.update({ embeds: [makeEmbed('You have boarded this vessel.')], components: [] });
+					}
+					else if (state == COLLECT_STATES.DONATE) {
+						// add all your materials to the ship
+						// then delete the materials you have
+						// then post an update message <3
+						await ShipsTable.update({
+							fuel: await chosenShip.get('fuel') + await userData.get('fuel'),
+							supplies: await chosenShip.get('supplies') + await userData.get('supplies'),
+							structure: await chosenShip.get('structure') + await userData.get('structure'),
+						}, { where: { userId: chosenShipId } });
+						await PlayersTable.update({
+							fuel: 0,
+							supplies: 0,
+							structure: 0,
+						}, { where: { userId: await userData.get('userId') } });
+
+						await i.update({ embeds: [makeEmbed('Materials Donated.')], components: [] });
+					}
+					else if (state == COLLECT_STATES.LAUNCH) {
+						// TODO :)
+						await i.update({ embeds: [makeEmbed('TKTK')], components: [] });
 					}
 					else if (state == COLLECT_STATES.SELECT) {
 						/*	TODO
@@ -161,6 +182,7 @@ module.exports = {
 							if (passengers[k] != null) {
 								passengersString += `\n${await passengers[k].get('name')}`;
 							}
+
 							if (passengers[k] == i.user.id) {
 								alreadyBoarded = true;
 							}
@@ -173,6 +195,8 @@ module.exports = {
 						const structure = await chosenShip.get('structure');
 						const arcInfo = getShipInfo(fuel, supplies, structure);
 
+						const enableLaunch = arcInfo.finalPassengers <= passengers.length && chosenShipId == i.user.id;
+
 						const infoText = `${await (await PlayersTable.findOne({ where: { userId: i.values[0] } })).get('name')}'s ARC
 
 FUEL: ${fuel}  |  Capacity: ${arcInfo.fuelPassengers} Passengers,  ${arcInfo.nextFuelCap - fuel} fuel to next
@@ -183,10 +207,6 @@ STRUCTURE: ${structure}  |  Capacity: ${arcInfo.structurePassengers} Passengers,
 **CURRENT PASSENGERS:** ${passengers.length}
 ${passengersString}
 `;
-						// ok, now i add 3 more buttons.
-						// CONSTRUCT - donates *all* of your materials to the Arc.
-						// BOARD - become a passenger of the Arc, dropping any ship you previously were a passenger of.
-						// LAUNCH - launches the arc.
 
 						await i.update({
 							embeds: [makeEmbed(infoText + '\n\n(these buttons dont do anything yet)')], components: [await arcButtonInteractions(alreadyBoarded)],
@@ -328,7 +348,7 @@ function getShipInfo(fuel, structure, supplies) {
 	return ret;
 }
 
-async function arcButtonInteractions(alreadyBoarded) {
+async function arcButtonInteractions(alreadyBoarded, launching) {
 	// ok, now i add 3 more buttons.
 	// CONSTRUCT - donates *all* of your materials to the Arc.
 	// BOARD - become a passenger of the Arc, dropping any ship you previously were a passenger of.
@@ -340,7 +360,7 @@ async function arcButtonInteractions(alreadyBoarded) {
 		.setCustomId('addMaterials')
 		.setLabel('DONATE ALL MATERIALS')
 		.setStyle('SECONDARY');
-
+	console.log(alreadyBoarded);
 	const board = new MessageButton()
 		.setCustomId('board')
 		.setLabel('BOARD ARC')
@@ -350,7 +370,8 @@ async function arcButtonInteractions(alreadyBoarded) {
 	const launch = new MessageButton()
 		.setCustomId('launch')
 		.setLabel('LAUNCH ARC.')
-		.setStyle('DANGER');
+		.setStyle('DANGER')
+		.setDisabled(launching);
 
 	ret.addComponents(
 		addMaterials,
