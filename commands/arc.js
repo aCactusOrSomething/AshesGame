@@ -196,6 +196,7 @@ module.exports = {
 						const arcInfo = getShipInfo(fuel, supplies, structure);
 
 						const enableLaunch = arcInfo.finalPassengers <= passengers.length && chosenShipId == i.user.id;
+						console.log(enableLaunch);
 
 						const infoText = `${await (await PlayersTable.findOne({ where: { userId: i.values[0] } })).get('name')}'s ARC
 
@@ -275,11 +276,8 @@ async function arcSelectMenu(shipsArray, page, playersTable) {
 		if (passengers[0] === '') {
 			passengers = [];
 		}
-		console.log(passengers);
-
 
 		const user = await playersTable.findOne({ where: { userId: item.userId } });
-		console.log(item.userId);
 		const name = await user.get('name');
 		menu.addOptions([
 			{
@@ -360,18 +358,18 @@ async function arcButtonInteractions(alreadyBoarded, launching) {
 		.setCustomId('addMaterials')
 		.setLabel('DONATE ALL MATERIALS')
 		.setStyle('SECONDARY');
-	console.log(alreadyBoarded);
 	const board = new MessageButton()
 		.setCustomId('board')
 		.setLabel('BOARD ARC')
 		.setStyle('PRIMARY')
 		.setDisabled(alreadyBoarded);
 
+
 	const launch = new MessageButton()
 		.setCustomId('launch')
 		.setLabel('LAUNCH ARC.')
 		.setStyle('DANGER')
-		.setDisabled(launching);
+		.setDisabled(!launching);
 
 	ret.addComponents(
 		addMaterials,
