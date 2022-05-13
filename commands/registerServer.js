@@ -35,7 +35,7 @@ module.exports = {
 			const embed = makeEmbed(confirmationText, color);
 
 			const reply = await interaction.editReply({ embeds: [embed], components: [row] });
-			const collector = reply.createMessageComponentCollector({ time: 15000 });
+			const collector = interaction.channel.createMessageComponentCollector({ time: 15000 }, { message: await reply });
 
 			collector.on('collect', async i => {
 				if (i.customId === 'yes') {

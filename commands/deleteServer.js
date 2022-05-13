@@ -47,7 +47,7 @@ module.exports = {
 		// deletion code
 		const reply = await interaction.editReply({ embeds: [text], components: [buttons] });
 
-		const collector = reply.createMessageComponentCollector({ time: 15000 });
+		const collector = interaction.channel.createMessageComponentCollector({ time: 15000 }, { message: await reply });
 		collector.on('collect', async i => {
 			if (i.user.id !== interaction.user.id) {
 				await i.reply({ content: 'These questions are not yours to answer.', ephemeral: true });

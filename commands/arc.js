@@ -76,7 +76,7 @@ module.exports = {
 
 				const reply = await interaction.editReply({ embeds: [makeEmbed('TKTK')], components: content });
 
-				const collector = reply.createMessageComponentCollector({ time: 15000 });
+				const collector = interaction.channel.createMessageComponentCollector({ time: 15000 }, { message: await reply });
 
 				collector.on('collect', async i => {
 					if (i.user.id !== interaction.user.id) {
@@ -177,12 +177,12 @@ module.exports = {
 							passengers = [];
 						}
 						let passengersString = '';
+						const passengersRefs = [];
 						for (let k = 0; k < passengers.length; k++) {
-							passengers[k] = await PlayersTable.findOne({ where: { userId: passengers[k] } });
-							if (passengers[k] != null) {
-								passengersString += `\n${await passengers[k].get('name')}`;
+							passengersRefs[k] = await PlayersTable.findOne({ where: { userId: passengers[k] } });
+							if (passengersRefs[k] != null) {
+								passengersString += `\n${await passengersRefs[k].get('name')}`;
 							}
-
 							if (passengers[k] == i.user.id) {
 								alreadyBoarded = true;
 							}
@@ -209,7 +209,7 @@ ${passengersString}
 `;
 
 						await i.update({
-							embeds: [makeEmbed(infoText + '\n\n(these buttons dont do anything yet)')], components: [await arcButtonInteractions(alreadyBoarded)],
+							embeds: [makeEmbed(infoText + '\n\n(these buttons dont do anything yet)')], components: [await arcButtonInteractions(alreadyBoarded, enableLaunch)],
 						});
 					}
 					else {
