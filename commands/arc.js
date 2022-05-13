@@ -157,7 +157,7 @@ module.exports = {
 					}
 					else if (state == COLLECT_STATES.LAUNCH) {
 						// TODO :)
-						await i.update({ embeds: [makeEmbed('TKTK')], components: [] });
+						await i.update({ embeds: [makeEmbed('You have escaped the world.\n\nThanks for playing.')], components: [] });
 					}
 					else if (state == COLLECT_STATES.SELECT) {
 						/*	TODO
