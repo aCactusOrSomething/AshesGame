@@ -24,6 +24,11 @@ module.exports = {
 
 					let name = await playerData.get('name');
 					let desc = await playerData.get('description');
+					let timeText = 'T.I.M.E. DISABLED';
+					if (await playerData.get('fuel')) {
+						timeText = 'T.I.M.E. ENABLED';
+					}
+					const text = `${desc}\n${timeText} \nFUEL: ${await playerData.get('fuel')} \nSTRUCTURE: ${await playerData.get('structure')} \nSUPPLIES: ${await playerData.get('supplies')} `;
 					const emoji = await playerData.get('naviganter');
 
 					if (newName != null) {
@@ -40,13 +45,13 @@ module.exports = {
 					const embed = new MessageEmbed()
 						.setColor(PURPLE)
 						.setTitle(name)
-						.setDescription(desc)
+						.setDescription(text)
 						.setFooter(`${emoji} naviganter online...`);
 					interaction.editReply({ embeds: [embed] });
 
 				}
 				catch {
-					return interaction.editReply({ embeds: [makeEmbed('ERROR: unable to access data from the future. \n*Please `/install` A.S.H.E.S. to gain access.*', GREEN)] });
+					return interaction.editReply({ embeds: [makeEmbed('ERROR: unable to access data from the future. \n*Please `/ install` A.S.H.E.S. to gain access.*', GREEN)] });
 				}
 
 			}

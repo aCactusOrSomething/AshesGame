@@ -60,7 +60,7 @@ If you wish to start anew, you must first \`/deleteplayer\`.`, RED);
 
 
 			const newPlayerData = {
-				name: 'Lily Cypress',
+				name: interaction.user.username,
 				description: 'A new A.S.H.E.S. player.',
 				id: interaction.user.id,
 				location: 'House',
