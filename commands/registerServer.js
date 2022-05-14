@@ -17,7 +17,7 @@ module.exports = {
 			const confirmationText = '**A.S.H.E.S. is an apocalypse evacuation protocol. Do not introduce it to this reality unless it is already doomed.\n\nDo you still wish to continue?**';
 			const color = PURPLE;
 			const registeredIDs = await sequelize.model('Guilds');
-			if (await registeredIDs.findOne({ where: { userId: interaction.guildId } }) == null) {
+			if (await registeredIDs.findOne({ where: { guildId: interaction.guildId } }) == null) {
 				return interaction.editReply({ content:'This server has already been initialized. You must `/deleteserver` first before registering as a new world.', ephemeral: true });
 			}
 
