@@ -18,7 +18,7 @@ client.once('ready', () => {
 	setup();
 	try {
 		sequelize.authenticate();
-		client.user.setActivity('v0.1.0 - Survival & Escape');
+		client.user.setActivity('v0.1.0 - Survival & Escape', { type: 'PLAYING' });
 		console.log('database connection achieved!');
 	}
 	catch (error) {
