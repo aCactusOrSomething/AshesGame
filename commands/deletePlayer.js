@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageActionRow, MessageButton } = require('discord.js');
-const { sequelize } = require('../datastuffs.js');
+const { sequelize, tableToArray } = require('../datastuffs.js');
 const { makeEmbed, RED } = require('../templates.js');
 
 // TODO needs to delete the player.
@@ -65,6 +65,15 @@ module.exports = {
 				await ShipsTable.destroy({
 					where: { userId: `${interaction.user.id}` },
 				});
+
+				// i ALSO need to make sure they're removed from any arc they're the passenger of
+				const ShipsArray = await tableToArray(ShipsTable);
+				for (let j = 0; j < ShipsArray.length; j++) {
+					const passengers = (await ShipsArray[j].get('passengers')).split(',');
+					if (passengers[0] !== '') {
+						passengers.splice(passengers.indexof(interaction.user.id), 1);
+					}
+				}
 				await interaction.editReply({ embeds: [makeEmbed('DELETION PROCESSED.\n\n**RECORDS BURNED.**\n\n*Your character has been deleted successully. Thank you for playing!', RED)], components: [] });
 				return;
 			}
