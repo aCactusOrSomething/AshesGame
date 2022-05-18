@@ -21,13 +21,10 @@ module.exports = {
 		const ShipsTable = await sequelize.model(`${interaction.guildId}-Ships`);
 		// TODO need to check to see if the player exists before i delete them.
 
-		try {
-			const poolsData = await PlayersTable.findOne({ where: { name: 'historyEmoji' } });
-			await poolsData.get('data');
-		}
-		catch {
-			await interaction.editReply({ embeds: [makeEmbed('Error: No records exist currently.', RED)], components: [] });
-			return;
+
+		const registeredIDs = await sequelize.model('Guilds');
+		if (await registeredIDs.findOne({ where: { guildId: interaction.guildId } }) == null) {
+			return interaction.editReply({ embeds: [makeEmbed('Error: No records exist currently.', RED)], components: [] });
 		}
 
 		const text = makeEmbed('**WARNING**\n\nThis action will __permanently delete__ All data associated with this server.\n\nThis includes __All Player Data__ as well.\n\nAre you sure?', RED);
@@ -55,17 +52,12 @@ module.exports = {
 			}
 			if (i.customId === 'delete') {
 
-				await PlayersTable.destroy({
-					where: { userId: `${interaction.user.id}` },
-				});
-				await WorldsTable.destroy({
-					where: { userId: `${interaction.user.id}` },
-				});
-				await PoolsTable.destroy({
-					where: { userId: `${interaction.user.id}` },
-				});
-				await ShipsTable.destroy({
-					where: { userId: `${interaction.user.id}` },
+				await PlayersTable.sync({ force: true });
+				await WorldsTable.sync({ force: true });
+				await PoolsTable.sync({ force: true });
+				await ShipsTable.sync({ force: true });
+				await registeredIDs.destroy({
+					where: { guildId: `${interaction.guildId}` },
 				});
 				await interaction.editReply({ embeds: [makeEmbed('DELETION PROCESSED.\n\n**RECORDS BURNED.**\n\n*Your world has been abandoned. Thank you for playing!', RED)], components: [] });
 				return;
