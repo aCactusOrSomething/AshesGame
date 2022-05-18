@@ -296,12 +296,12 @@ async function arcSelectMenu(shipsArray, page, playersTable) {
 }
 
 
-const BASE_FUEL = 50;
+const BASE_FUEL = 2;
 const BASE_STRUCTURE = 100;
 const BASE_SUPPLIES = 200;
 
 function getFuelCost(passengers) {
-	return Math.pow(BASE_FUEL, passengers);
+	return 150 * passengers + Math.pow(BASE_FUEL, passengers);
 }
 
 function getStructureCost(passengers) {
