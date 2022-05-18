@@ -227,7 +227,7 @@ ${passengersString}
 		}
 		catch (error) {
 			console.log(error);
-			return interaction.editReply({ embeds: [makeEmbed('ERROR: Unable to access data. Is ASHES *Registered*d for this server, and have you *Installed* it?', GREEN)] });
+			return interaction.editReply({ embeds: [makeEmbed('ERROR: Unable to access data. Is ASHES *Registered* for this server, and have you *Installed* it?', GREEN)] });
 		}
 	},
 };

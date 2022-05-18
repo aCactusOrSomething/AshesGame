@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { sequelize, tableToArray } = require('../datastuffs.js');
 const { MessageButton, MessageActionRow, MessageSelectMenu } = require('discord.js');
-const { makeEmbed, GREEN } = require('../templates.js');
+const { makeEmbed, GREEN, RED } = require('../templates.js');
 
 
 const MAX_SELECT_MENU_SIZE = 25;
@@ -14,6 +14,10 @@ module.exports = {
 	async execute(interaction) {
 		await interaction.deferReply();
 		try {
+			const registeredIDs = await sequelize.model('Guilds');
+			if (await registeredIDs.findOne({ where: { guildId: interaction.guildId } }) == null) {
+				return interaction.editReply({ embeds: [makeEmbed('Error: No records exist currently.', RED)], components: [] });
+			}
 			const WorldsTable = await sequelize.model(`${interaction.guildId}-Worlds`);
 			const WorldsArray = await tableToArray(WorldsTable);
 			const PlayersTable = await sequelize.model(`${interaction.guildId}-Players`);

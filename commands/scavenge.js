@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { sequelize } = require('../datastuffs.js');
 const { MessageButton, MessageActionRow } = require('discord.js');
-const { makeEmbed, PURPLE } = require('../templates.js'); // use purple for normal exploration and green for combat interactions.\
+const { makeEmbed, PURPLE, RED } = require('../templates.js'); // use purple for normal exploration and green for combat interactions.\
 
 const PAYOUT_NUMBER = 10;
 //
@@ -17,6 +17,11 @@ module.exports = {
 		.setDescription('Explore your current location for resources.'),
 	async execute(interaction) {
 		await interaction.deferReply();
+
+		const registeredIDs = await sequelize.model('Guilds');
+		if (await registeredIDs.findOne({ where: { guildId: interaction.guildId } }) == null) {
+			return interaction.editReply({ embeds: [makeEmbed('Error: No records exist currently.', RED)], components: [] });
+		}
 
 		try {
 			// first i need all of these.

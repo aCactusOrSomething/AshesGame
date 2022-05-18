@@ -12,6 +12,11 @@ module.exports = {
 	async execute(interaction) {
 		await interaction.deferReply();
 
+		const registeredIDs = await sequelize.model('Guilds');
+		if (await registeredIDs.findOne({ where: { guildId: interaction.guildId } }) == null) {
+			return interaction.editReply({ embeds: [makeEmbed('Error: No records exist currently.', RED)], components: [] });
+		}
+
 		const PlayersTable = await sequelize.model(`${interaction.guildId}-Players`);
 		const WorldsTable = await sequelize.model(`${interaction.guildId}-Worlds`);
 		const ShipsTable = await sequelize.model(`${interaction.guildId}-Ships`);

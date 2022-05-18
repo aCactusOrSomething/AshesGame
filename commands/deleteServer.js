@@ -15,17 +15,17 @@ module.exports = {
 			return interaction.editReply({ content: 'You must be the Server Administrator to use this command.', ephemeral: true });
 		}
 
+		const registeredIDs = await sequelize.model('Guilds');
+		if (await registeredIDs.findOne({ where: { guildId: interaction.guildId } }) == null) {
+			return interaction.editReply({ embeds: [makeEmbed('Error: No records exist currently.', RED)], components: [] });
+		}
+
 		const PlayersTable = await sequelize.model(`${interaction.guildId}-Players`);
 		const WorldsTable = await sequelize.model(`${interaction.guildId}-Worlds`);
 		const PoolsTable = await sequelize.model(`${interaction.guildId}-Pools`);
 		const ShipsTable = await sequelize.model(`${interaction.guildId}-Ships`);
 		// TODO need to check to see if the player exists before i delete them.
 
-
-		const registeredIDs = await sequelize.model('Guilds');
-		if (await registeredIDs.findOne({ where: { guildId: interaction.guildId } }) == null) {
-			return interaction.editReply({ embeds: [makeEmbed('Error: No records exist currently.', RED)], components: [] });
-		}
 
 		const text = makeEmbed('**WARNING**\n\nThis action will __permanently delete__ All data associated with this server.\n\nThis includes __All Player Data__ as well.\n\nAre you sure?', RED);
 		const buttons = new MessageActionRow();
