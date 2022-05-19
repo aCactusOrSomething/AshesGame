@@ -23,7 +23,7 @@ const HISTORIES = [
 	{ flavor: 'Atlantis Discovered.', emoji: ['🐟', '🔱', '🐠'], npcTypes: ['Atlantean', 'mermaid'] }, // -Atlantis surfaces as a world power // neb
 	{ flavor: 'ERROR: Critical lack of pollinators.', emoji: ['🐝', '❌', '🥀', '💀'], npcTypes: ['ghastly bee', 'haunted flower'] }, // -bee extinction // neb
 	{ flavor: 'Alpha! Recruit a team of teenagers with attitue!', emoji: ['🦖', '🦕', '🦸', '🤖', '🧙‍♀️', '🌁', '🌕'], npcTypes: ['power ranger', 'giant monster', 'evil moon witch'] }, // -power rangers // broon
-	
+
 	{ flavor: 'Defragmentation of Physical law required.', emoji: ['💍', '✌️', '🌳'], npcTypes: ['tarnished', 'Shardbearer'] }, // the shattering // egg
 	{ flavor: 'Importing magpie.ash from /mars/...', emoji: ['♂️', '🦤', '🌳'], npcTypes: ['Martian', 'Magpie'] }, // the magpies have successfully unionized to destroy Mars // reddy
 	{ flavor: 'WARNING: planetary temperatures exceeding maximum levels.', emoji: ['🌋', '⭕', '🌡️'], npcTypes: ['Heat Sink', 'Core Touched'] }, // Earth's OS became incompatible with the firmware of the Core, leading to major heat sink issues // shogun
@@ -35,7 +35,7 @@ const HISTORIES = [
 	{ flavor: 'Randomly distributing magic...', emoji: ['🪄', '✨', '✴️'], npcTypes: ['magician', 'sage'] }, // -magic is suddenly very real which sucks // may
 	{ flavor: 'Cutting the deck...', emoji: ['♣️', '♠️', '♥️', '♦️', '🃏'], npcTypes: ['jack', 'queen', 'king', 'ace', 'joker'] }, // -playing cards // broon
 	{ flavor: 'Illuminating Dark gods...', emoji: ['🦑', '🐙'], npcTypes: ['UNKNOWN', 'cultist'] }, // 🦑-The Dark Gods have returned // neb
-	{ flavor: 'ERROR: Unable to restore Internet.', emoji: ['💾', '🕸', ], npcTypes: ['Moderator'] }, // 🕸 - The Internet vanishes // neb
+	{ flavor: 'ERROR: Unable to restore Internet.', emoji: ['💾', '🕸' ], npcTypes: ['Moderator'] }, // 🕸 - The Internet vanishes // neb
 	{ flavor: 'C.O.V.E.N. Process Enabled.', emoji: ['🌪'], npcTypes: ['Witch', 'Wizard'] }, // 🌪-Witches appear and begin to wreck havoc // neb
 	{ flavor: 'WARNING: Background radiation critical.', emoji: ['🐘', '👞', '☢️'], npcTypes: ['Elephant'] }, // -Elephant’s Foot brief exposure event // ollie
 	{ flavor: 'Chat disabled during inauguration livestream.', emoji: ['☕' ], npcTypes: ['Senator985' ] }, // -the inauguration of the 69th president of the United States, Jeremy Elbertson // ollie
@@ -99,7 +99,7 @@ function worldGen() {
 	histories = [histories[0], histories[1], histories[2]];
 
 	const emoji = [];
-	const npcPool = [];
+	let npcPool = [];
 
 	for (let i = 0; i < histories.length; i++) {
 		const historyEmoji = histories[i].emoji;
@@ -109,6 +109,7 @@ function worldGen() {
 		const historyNpcs = histories[i].npcTypes;
 		for (let j = 0; j < historyNpcs.length; j++) {
 			npcPool.push(historyNpcs[j]);
+			npcPool = shuffleArray(npcPool);
 		}
 	}
 

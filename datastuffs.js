@@ -109,11 +109,25 @@ function makeSession(id) {
 		data: { type: Sequelize.STRING }, // all the data for them
 	});
 
+	const npcs = sequelize.define(`${id}-Npcs`, {
+		name: {
+			type: Sequelize.TEXT,
+			unique: true,
+		},
+		health: {
+			type: Sequelize.INTEGER,
+		},
+		rivalries: {
+			type: Sequelize.STRING,
+		},
+	});
+
 	return {
 		players: players,
 		world: world,
 		ships: ships,
 		pools: pools,
+		npcs: npcs,
 	};
 
 }
@@ -123,6 +137,7 @@ async function syncSession(schemas, worldData, force = false, genPools = false) 
 	await schemas.world.sync({ force: force });
 	await schemas.ships.sync({ force: force });
 	await schemas.pools.sync({ force: force });
+	await schemas.npcs.sync({ force: force });
 	if (genPools) {
 		await constructPools(schemas, worldData);
 	}
